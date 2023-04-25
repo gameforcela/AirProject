@@ -21,6 +21,7 @@ import {
   useColorScheme,
   View,
   Button,
+  Alert,
 } from 'react-native';
 
 import {
@@ -65,6 +66,20 @@ type Position = {
   latitudeDelta: number;
   longitudeDelta: number;
 };
+
+showDetailOfSensor = (item) =>
+    Alert.alert(
+      'Info o senzoru: ',
+      'ID senzoru: '+ item.sensor.id + '\n' + 'Počet pinů: ' + item.sensor.pin + '\n' + 'Id u výrobce: ' + item.sensor.sensor_type.id + '\n' + 'Název senzoru: ' + item.sensor.sensor_type.name + '\n' + 'Výrobce senzoru: ' + item.sensor.sensor_type.manufacturer ,
+
+
+      [
+        {
+          text: 'Ok'
+        }
+      ]
+    )
+
 
 const MapScreen = () => {
   const [current_weathers, setWeather] = useState<Data[] | undefined>();
@@ -140,12 +155,11 @@ const MapScreen = () => {
                     <Marker
                         key = {item.id}
                         coordinate = {{latitude: Number(item.latitude), longitude: Number(item.longitude)}}>
-                        <Callout>
-                        <Text>{item.sensor.sensor_type.manufacturer}</Text>
-
-                        {(item.sensor_values || []).map(values => {
-                          return(
-                          <Text> {values.value_type}  je rovno {values.value} </Text>
+                        <Callout onPress = {() => {this.showDetailOfSensor(item)}} >
+                            <Text>{item.sensor.sensor_type.manufacturer}</Text>
+                            {(item.sensor_values || []).map(values => {
+                              return(
+                             <Text> {values.value_type}  je rovno {values.value} </Text>
                         )})}
                         </Callout>
                     </Marker>
